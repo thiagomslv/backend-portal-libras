@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -16,14 +18,20 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 public class SecurityConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+
+        return new BCryptPasswordEncoder();
+    }
     
     @Bean //Configura a cadeia de execução de filtros do Spring Security.
     SecurityFilterChain defauSecurityFilterChain(HttpSecurity http) throws Exception{
         
         //Não é ncessário nenhum tipo de gerencimento de seção do Spring Security. A seção será validada apenas por token JWT.
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .cors(corsConfig -> corsConfig.configurationSource(new CorsConfigurationSource() {
 
+            .cors(corsConfig -> corsConfig.configurationSource(new CorsConfigurationSource() {
                 @Override
                 public CorsConfiguration getCorsConfiguration(HttpServletRequest arg0) {
                     
@@ -38,6 +46,8 @@ public class SecurityConfig {
                     return config;
                 }
             }))
+
+            //A proteção de CSRF será configurada ao longo do projeto.
             .csrf(csrf -> csrf.disable())
 
             //A cadeia de filtros deve estar aqui.
