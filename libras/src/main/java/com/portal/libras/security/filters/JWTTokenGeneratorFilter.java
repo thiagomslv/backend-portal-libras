@@ -2,11 +2,15 @@ package com.portal.libras.security.filters;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -37,6 +41,7 @@ public class JWTTokenGeneratorFilter extends OncePerRequestFilter{
             SecretKey key = Keys.hmacShaKeyFor(SecurityConstants.JWT_KEY.getBytes(StandardCharsets.UTF_8));
 
             String jwtToken = Jwts.builder().claim("email", authentication.getName())
+                                            .claim("authorities", parseAuthorities(authentication.getAuthorities()))
                                             .issuedAt(new Date())
                                             .expiration(new Date(new Date().getTime() + 30000000))
                                             .signWith(key).compact();
@@ -52,6 +57,17 @@ public class JWTTokenGeneratorFilter extends OncePerRequestFilter{
 
         //Só executa o filtro na rota de autenticação.
         return !request.getServletPath().equals(SecurityConstants.AUTH_ROUTE);
+    }
+
+    private String parseAuthorities(Collection<? extends GrantedAuthority> collection){
+
+        Set<String> authoritiesSet = new HashSet<>();
+
+        for (GrantedAuthority authority : collection) {
+
+            authoritiesSet.add(authority.getAuthority());
+        }
+        return String.join(",", authoritiesSet);
     }
     
 }
