@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-LibrasApplication<libras>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.portal.libras.LibrasApplication",
+            "projectName": "libras",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
