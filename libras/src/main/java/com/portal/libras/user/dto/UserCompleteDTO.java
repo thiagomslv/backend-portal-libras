@@ -1,3 +1,3 @@
 package com.portal.libras.user.dto;
 
-public record UserCompleteDTO(String name, String email, String password) {}
+public record UserCompleteDTO(String fistName, String lastName, String email, String password) {}

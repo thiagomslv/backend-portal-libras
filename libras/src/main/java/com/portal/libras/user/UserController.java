@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portal.libras.user.dto.UserCompleteDTO;
@@ -13,13 +14,14 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("user")
 public class UserController {
 
     private UserService userService;
     
-    @PostMapping("/signUp")
-    public ResponseEntity<HttpStatus> signUp(@RequestBody UserCompleteDTO completeUser){
+    @PostMapping("/add")
+    public ResponseEntity<HttpStatus> add(@RequestBody UserCompleteDTO completeUser){
 
-        return ResponseEntity.status(userService.addUser()).build();
+        return ResponseEntity.status(userService.addUser(completeUser)).build();
     }
 }
